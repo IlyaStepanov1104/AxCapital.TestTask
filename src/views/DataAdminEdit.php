@@ -2,10 +2,19 @@
 
 namespace views;
 
+use models\Tree;
 use Page;
 
 class DataAdminEdit extends Page
 {
+
+    public Tree $tree;
+
+    public function __construct($user, $pdo)
+    {
+        parent::__construct($user, $pdo);
+        $this->tree = new Tree($pdo);
+    }
     public function middle()
     {
         echo '<div class="container mregister">
@@ -15,31 +24,12 @@ class DataAdminEdit extends Page
                 <div class="errors">';
 
         $find = $this->errorOrEdit();
-        if (!$find){
-            echo '<p>
-                            <label for="name">Название редактируемого элемента<br>
-                                <input class="input" id="name" name="name" size="32" type="text" value="">
-                            </label>
-                        </p>
-                        </div>
-                        <input type="hidden" name="send" value="5">
-                        <p class="submit"><input class="button" type="submit" value="Выбрать"></p>
-                    </form>
-                </div>
-            </div>';
         }
-
-    }
 
     public function errorOrEdit(): bool
     {
-        if ($_POST['send'] != 5){
-            return false;
-        } else if (empty($_POST['name'])){
-            echo 'ОШИБКА: не найден данный элемент!';
-            return false;
-        } else if(empty($_POST['id'])) {
-            $name = "'".$_POST['name']."'";
+        if(empty($_POST['id'])) {
+            $name = "'".$_GET['name']."'";
             $sth = $this->pdo->prepare("SELECT * FROM `data` WHERE `name` = ".$name);
             $sth->execute();
             $find = $sth->fetch();
@@ -62,7 +52,6 @@ class DataAdminEdit extends Page
             $name = $_POST['name'];
             $description = $_POST['description'] ? "'".$_POST['description']."'" : 'NULL';
             $parent_name = $_POST['parent'] ? "'".$_POST['parent']."'" : 'NULL';
-
             $sth = $this->pdo->prepare("SELECT id FROM `data` WHERE `name` = ".$parent_name);
             $sth->execute();
             $parent_id = $sth->fetch();
@@ -101,7 +90,10 @@ class DataAdminEdit extends Page
                             </p>
                             <p>
                                 <label for="name">Родитель редактируемого элемента<br>
-                                    <input class="input" id="parent" name="parent" size="32" type="text" value="' . $parent . '">
+                                    <select class="input" id="parent" name="parent" size="1">';
+        echo '<option value="NULL"></option>';
+        $this->tree->printDataOptions($this->tree->data, 0, $_GET['name'], $parent);
+        echo '                </select>
                                 </label>
                             </p>
                             </div>

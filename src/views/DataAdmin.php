@@ -19,7 +19,6 @@ class DataAdmin extends Page
 
         echo '<p><a href="/admin-data-add/">Добавить элемент</a></p>';
         echo '<p><a href="/admin-data-delete/">Удалить элемент</a></p>';
-        echo '<p><a href="/admin-data-edit/">Редактировать элемент</a></p>';
         $this->tree->printDataAdmin($this->tree->data);
     }
 }

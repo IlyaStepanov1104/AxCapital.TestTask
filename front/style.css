@@ -110,6 +110,26 @@ span {
     box-shadow: 0 0 3px 0 rgba(245, 130, 32, 0.75);
 }
 
+#modal {
+    z-index: 2;
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0.8, 0.8, 0.8, 0.4);
+}
+
+#modal h3{
+    background-color: #fff;
+    height: 40vh;
+    width: 80vw;
+    margin: 20vh 10vw;
+    text-align: center;
+    padding-top: 10vh;
+}
+
 /*= КНОПКИ
 --------------------------------------------------------*/
 

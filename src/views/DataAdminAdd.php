@@ -3,11 +3,18 @@
 namespace views;
 
 use Exception;
+use models\Tree;
 use Page;
 
 class DataAdminAdd extends Page
 {
+    public Tree $tree;
 
+    public function __construct($user, $pdo)
+    {
+        parent::__construct($user, $pdo);
+        $this->tree = new Tree($pdo);
+    }
     public function middle()
     {
         echo '<div class="container mregister">
@@ -31,7 +38,10 @@ class DataAdminAdd extends Page
                         </p>
                         <p>
                             <label for="parent">Имя родителя<br>
-                                <input class="input" id="parent" name="parent" size="32" type="text" value="">
+                                <select class="input" id="parent" name="parent" size="1">';
+        echo '<option value="NULL"></option>';
+        $this->tree->printDataOptions($this->tree->data);
+        echo '                </select>
                             </label>
                         </p>
                         <input type="hidden" name="send" value="3">
@@ -71,6 +81,17 @@ class DataAdminAdd extends Page
             }
         } else if ($_POST['send'] == 3){
             echo 'ОШИБКА: параметр имя - обязателен!';
+        }
+    }
+
+    /**
+     * @param $nesting_number
+     * @return void
+     */
+    public function options($nesting_number): void
+    {
+        foreach ($this->tree->data as $leaf) {
+            echo '<option>' . str_repeat("&mdash;", $nesting_number) . $leaf['name'] . '</option>';
         }
     }
 }
